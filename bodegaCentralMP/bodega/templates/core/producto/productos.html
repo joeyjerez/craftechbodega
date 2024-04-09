@@ -1,0 +1,108 @@
+{% extends 'core/base.html' %}
+
+{% load static humanize %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row text-center my-4 mx-5">
+        {% if 'OK' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Producto</strong> guardado correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'FAIL' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Ha ocurrido un error.</strong> Inténtelo nuevamente más tarde.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <h1>Lista de Productos</h1>
+        <div class="col-lg-12 producto">
+            <div class="text-start my-4 mx-5">
+                <a href="{% url 'productos_new' %}" class="btn btn-success">Agregar Producto</a>
+            </div>
+            <div class="container-fluid table-wrapper">
+                <table id="table" class="table table-hover table-bordered border-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fw-bold">Imagen</th>
+                            <th scope="col" class="fw-bold">Código</th>
+                            <th scope="col" class="fw-bold">Nombre</th>
+                            <th scope="col" class="fw-bold">Stock</th>
+                            <th scope="col" class="fw-bold">Marca</th>
+                            <th scope="col" class="fw-bold">Descripción</th>
+                            <th scope="col" class="fw-bold">Precio</th>
+                            <th scope="col" class="fw-bold">Fecha de Creación</th>
+                            <th scope="col" class="fw-bold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos %}
+                        <tr>
+                            {% if p.imagen %}
+                            <td><img width="70px" src="{{p.imagen.url}}" alt="{{p.imagen}}"></td>
+                            {% else %}
+                            <td><img width="70px" src="{% static 'core/img/default.png' %}" alt=""></td>
+                            {% endif %}
+                            <td>{{p.codigo}}</td>
+                            <td>{{p.nombre}}</td>
+                            <td>{{p.stock}}</td>
+                            <td>{{p.marca}}</td>
+                            <td>{{p.descripcion}}</td>
+                            <td>${{p.precio|intcomma:False}}</td>
+                            <td>{{p.fecha_creacion}}</td>
+                            <td>
+                                <a class="btn btn-warning" href="/bodega/productos/{{p.codigo}}/edit"
+                                    data-bs-toggle="tooltip" data-bs-title="Editar producto">
+                                    <i class="bi bi-pencil-square text-dark"></i>
+                                </a>
+                                <a class="btn btn-danger modal-borrar" href="/bodega/productos/{{p.codigo}}/delete"
+                                    data-bs-toggle="tooltip" data-bs-title="Eliminar producto">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center fw-bold" colspan="9">No hay productos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog text-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Atención</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="modal-title">¿Estás seguro que deseas eliminar el producto seleccionado?<br>
+                        <strong>Este proceso no se puede deshacer.</strong>
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                    <a href="#" id="delete" class="btn btn-danger">Si</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block scripts %}
+    <script type="text/javascript">
+        $('.modal-borrar').on('click', function () {
+            const href = $(this).attr('data-href');
+            $('#delete').attr('href', href);
+        })
+    </script>
+    {% endblock %}

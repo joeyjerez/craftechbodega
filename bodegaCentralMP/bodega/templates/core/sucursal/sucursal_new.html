@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Sucursales{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Agregar Sucursal</h1>
+<br>
+<div class="container-fluid">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <!-- {{ form.as_p }} -->
+        <div class="row mx-5 justify-content-center">
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <div class="row mb-3">
+                        <div class="col input-group">
+                            <label for="id_sucursal" class="input-group-text fw-bold">ID Sucursal</label>
+                            {{form.id_sucursal}}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col input-group">
+                            <label for="nombre" class="input-group-text fw-bold">Nombre</label>
+                            {{form.nombre}}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col input-group">
+                            <label for="direccion" class="input-group-text fw-bold">Dirección</label>
+                            {{form.direccion}}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col input-group">
+                            <label for="direccion" class="input-group-text fw-bold">Correo</label>
+                            {{form.correo}}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col input-group">
+                            <label for="token" class="input-group-text fw-bold">Token</label>
+                            {{form.token}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="{% url 'sucursal_list' %}" class="btn btn-danger me-5">Volver a Sucursales</a>
+            <input type="submit" class="btn btn-success btn-block py-2" id="submit" value="Agregar">
+            <input type="reset" class="btn btn-warning btn-block py-2" id="clear" value="Borrar datos">
+        </div>
+    </form>
+</div>
+{% endblock content %}

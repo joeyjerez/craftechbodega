@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+    <h1>Inicio</h1>
+</div>
+<div class="container d-flex flex-wrap">
+    <div class="row mt-5">
+        <div class="col">
+            <div class="card" style="height: 25rem;">
+                <img class="card-img-top" src="{% static 'core/img/instrumenntos.jpg' %}" alt="" style="height: 17rem;">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Nuevos productos</b></h5>
+                    <p>Ve nuestros productos <a href="{% url 'productos_list' %}">aquí</a> </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="height: 25rem;">
+                <img class="card-img-top" src="{% static 'core/img/recursos.jpg' %}" alt="" style="height: 17rem;">
+                <div class="card-body">
+                    <h5><b>Esta semana</b></h5>
+                    <p>Cosas importantes de esta semana</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="height: 25rem;">
+                <img class="card-img-top" src="{% static 'core/img/pedidos.jpg' %}" alt="" style="height: 17rem;">
+                <div class="card-body">
+                    <h5><b>Pedidos</b></h5>
+                    <p>Ve los pedidos activos <a href="{% url 'pedidos_list' %}">aquí</a> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

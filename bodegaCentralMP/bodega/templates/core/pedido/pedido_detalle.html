@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load static humanize %}
+
+{% block title %}Pedido #{{ pedido.id_pedido }}{% endblock title %}
+
+{% block content %}
+<h1 class="fw-bold">Pedido #{{ pedido.id_pedido }} - {{ pedido.sucursal }}</h1>
+<br>
+<h2> <strong>Dirección:</strong> {{ pedido.sucursal.direccion }}</h2>
+<br>
+<h2><strong>Estado:</strong> {{ pedido.estado }}</h2>
+<div class="row">
+    <div class="col-5">
+        <form action="{{pedido.id_pedido}}/edit" method="POST">
+            {% csrf_token %}
+            <div class="input-group">
+                <select name="estado" id="estado" class="form-select">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Entregado">Entregado</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+                <input class="btn btn-success" type="submit" id="editar" value="Cambiar estado"></a>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<h2 class="fw-bold">Productos</h2>
+<div class="container-fluid">
+    <table class="table table-hover table-bordered border-dark table-striped">
+        <thead>
+            <tr>
+                <th scope="col" class="fw-bold">Producto</th>
+                <th scope="col" class="fw-bold">Marca</th>
+                <th scope="col" class="fw-bold">Cantidad</th>
+                <th scope="col" class="fw-bold">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in detalle %}
+            <tr>
+                <td class="fw-bold">{{d.producto.nombre}}</td>
+                <td>{{d.producto.marca}}</td>
+                <td>{{d.cantidad}}</td>
+                <td>${{d.subtotal | intcomma:False}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td class="text-center fw-bold" colspan="4">No se encuentran productos en el pedido.</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="1" class="fw-bold fs-4 text-center">Total</td>
+                <td colspan="3" class="fw-bold fs-4 text-center">${{total|intcomma:False}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

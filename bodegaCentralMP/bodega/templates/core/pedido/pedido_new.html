@@ -1,0 +1,89 @@
+{% extends 'core/base.html' %}
+{% load static humanize %}
+
+{% block title %}Agregar Pedido{% endblock title %}
+
+{% block content %}
+<h1 class="text-center">Agregar Pedido</h1>
+<br>
+<form action="" method="POST">
+    {% csrf_token %}
+    <!-- {{ form.as_p }} -->
+    <div class="row mx-5">
+        <div class="col">
+            <div class="form-group mb-3">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">ID Pedido</span>
+                            <input name="pedido" type="number" title="ID Pedido" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Sucursal</span>
+                            <select name="sucursal" id="sucursal" class="form-select">
+                                <option value="default">-----------</option>
+                                {% for s in sucursales %}
+                                <option value="{{s.id_sucursal}}">{{s.nombre}} - {{s.direccion}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Estado de Pedido</span>
+                            <select name="estado" id="estado" class="form-select">
+                                <option value="Pendiente" selected onselect="">Pendiente</option>
+                                <option value="Completado">Completado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    <div class="col-10">
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Seleccione un producto:</span>
+                            <select name="producto" id="producto" class="form-select">
+                                {% for p in productos %}
+                                <option value="{{ p.codigo }}" data-precio="{{ p.precio }}">
+                                    #{{p.codigo}} - {{ p.nombre}} - {{ p.marca }} - ${{ p.precio|intcomma:False }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <span class="input-group-text">Cantidad:</span>
+                            <input type="number" id="cantidad" name="cantidad" class="form-control">
+
+                            <button id="agregar-producto" class="btn btn-outline-success" type="button">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col text-center">
+                <div class="btn-group" role="group">
+                    <input type="submit" class="btn btn-success btn-block py-auto" id="submit" value="Guardar Pedido">
+                    <input type="reset" class="btn btn-warning btn-block py-auto" id="clear" value="Borrar datos">
+                    <a href="{% url 'pedidos_list' %}" class="btn btn-danger py-auto px-auto">Volver a Productos</a>
+                </div>
+            </div>
+            <br>
+            <h3>Productos agregados:</h3>
+            <div class="container mx-1">
+                <div class="row justify-content-center">
+                    <div class="col-8 text-center">
+                        <ul id="productos-agregados" class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <h2>Total del Pedido: <span id="total-pedido" name="total">$0</span></h2>
+            <input type="hidden" name="total-pedido" id="input-total-pedido" value="0">
+        </div>
+    </div>
+</form>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'core/js/pedido_new.js' %}"></script>
+{% endblock %}

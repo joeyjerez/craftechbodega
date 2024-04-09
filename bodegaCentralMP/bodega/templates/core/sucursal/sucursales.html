@@ -1,0 +1,98 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Sucursales{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row text-center my-4 mx-5">
+        {% if 'OK' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Sucursal</strong> guardada correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'FAIL' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Ha ocurrido un error.</strong> Inténtelo nuevamente más tarde.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <h1>Lista de Sucursales</h1>
+        <div class="col-lg-12 pedido">
+            <div class="text-start my-4 mx-5">
+                <a href="{% url 'sucursal_new' %}" class="btn btn-success">Agregar Sucursal</a>
+            </div>
+            <div class="container-fluid table-wrapper">
+                <table id="table" class="table table-hover table-bordered border-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fw-bold">ID Sucursal</th>
+                            <th scope="col" class="fw-bold">Nombre</th>
+                            <th scope="col" class="fw-bold">Dirección</th>
+                            <th scope="col" class="fw-bold">Correo</th>
+                            <th scope="col" class="fw-bold">Token</th>
+                            <th scope="col" class="fw-bold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in sucursales %}
+                        <tr>
+                            <td>{{s.id_sucursal}}</td>
+                            <td>{{s.nombre}}</td>
+                            <td>{{s.direccion}}</td>
+                            <td>{{s.correo}}</td>
+                            <td>{{s.token}}</td>
+                            <td>
+                                <a class="btn btn-warning" href="/bodega/sucursales/{{s.id_sucursal}}/edit"
+                                    data-bs-toggle="tooltip" data-bs-title="Editar sucursal">
+                                    <i class="bi bi-pencil-square text-dark"></i>
+                                </a>
+                                <a class="btn btn-danger" href="/bodega/sucursales/{{s.id_sucursal}}/delete"
+                                    data-bs-toggle="tooltip" data-bs-title="Eliminar sucursal">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center fw-bold" colspan="8">No hay sucursales registradas.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" tabindex="-1" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered text-dark">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Atención</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="modal-title">¿Estás seguro que deseas eliminar la sucursal seleccionada?<br>
+                        <strong>Este proceso no se puede deshacer.</strong>
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                    <a href="#" id="delete" class="btn btn-danger">Si</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block scripts %}
+    <script type="text/javascript">
+        $('.modal-borrar').on('click', function () {
+            const href = $(this).attr('data-href');
+            $('#delete').attr('href', href);
+        })
+    </script>
+    {% endblock %}

@@ -1,0 +1,9 @@
+#Carpeta Visual Studio Code
+.vscode/
+
+#pycache
+**__pycache__/
+**.pyc
+
+#Ambiente virtual venv
+.venv/

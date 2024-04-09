@@ -1,0 +1,128 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Pedidos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row text-center my-4 mx-5">
+        {% if 'OK' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Pedido</strong> guardado correctamente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'FAIL' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Ha ocurrido un error.</strong> Inténtelo nuevamente más tarde.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'POST' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Solicitud de seguimiento creada correctamente.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'POSTFAIL' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Ha ocurrido un error con la solicitud.</strong> Inténtelo nuevamente más tarde.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'R' in request.GET %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Estado del pedido actualizado.</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% if 'RF' in request.GET %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error al actualizar estado del pedido.</strong> Inténtelo nuevamente más tarde.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        <h1>Lista de Pedidos</h1>
+        <div class="col-lg-12 pedido">
+            <div class="">
+                <div class="d-flex justify-content-between my-4 mx-5">
+                    <a href="{% url 'pedidos_new' %}" class="btn btn-success">
+                        Agregar Pedido <i class="bi bi-plus-square"></i>
+                    </a>
+                    <a href="https://musicpro.bemtorres.win/transporte" target="_blank" class="btn btn-dark">
+                        Seguimiento <img src="{% static 'core/img/musicpro.png' %}" alt="MusicPro"
+                            style="height: 25px; width: 25px;"> <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="container-fluid table-wrapper">
+                <table id="table" class="table table-hover table-bordered border-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="fw-bold">ID Pedido</th>
+                            <th scope="col" class="fw-bold">Fecha de Solicitud</th>
+                            <th scope="col" class="fw-bold">Sucursal</th>
+                            <th scope="col" class="fw-bold">Estado</th>
+                            <th scope="col" class="fw-bold">Código de Seguimiento</th>
+                            <th scope="col" class="fw-bold">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pedidos %}
+                        <tr>
+                            <td>{{p.id_pedido}}</td>
+                            <td>{{p.fecha_pedido}}</td>
+                            <td>{{p.sucursal}}</td>
+                            <td>
+                                {{p.estado}}
+                                {% if "Completado" not in p.estado and "Entregado" not in p.estado %}
+                                <a id="btnActualizar" class="btn btn-outline-secondary btn-sm"
+                                    href="/bodega/pedidos/{{p.id_pedido}}/actualizar" data-bs-toggle="tooltip"
+                                    data-bs-title="Actualizar estado">
+                                    <i class="bi bi-arrow-clockwise text-dark"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if p.codigo_seguimiento is None %}
+                                <p>--</p>
+                                {% else %}
+                                {{p.codigo_seguimiento}}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" href="/bodega/pedidos/{{p.id_pedido}}"
+                                    data-bs-toggle="tooltip" data-bs-title="Detalles del pedido">
+                                    <i class="bi bi-clipboard2-data-fill"></i>
+                                </a>
+                                <a class="btn btn-danger" href="/bodega/pedidos/{{p.id_pedido}}/delete"
+                                    data-bs-toggle="tooltip" data-bs-title="Eliminar pedido">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                                {% if "Pendiente" in p.estado %}
+                                <a id="btnSolicitud" class="btn btn-dark"
+                                    href="/bodega/pedidos/{{p.id_pedido}}/solicitud/1" data-bs-toggle="tooltip"
+                                    data-bs-title="Solicitar transporte a MusicPro">
+                                    <img src="{% static 'core/img/musicpro.png' %}" alt="MusicPro"
+                                        style="height: 25px; width: 25px;">
+                                </a>
+                                <a id="btnSolicitud" class="btn btn-warning"
+                                    href="/bodega/pedidos/{{p.id_pedido}}/solicitud/2" data-bs-toggle="tooltip"
+                                    data-bs-title="Solicitar transporte a GranJVCorp">
+                                    <i class="bi bi-truck"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td class="text-center fw-bold" colspan="8">No hay pedidos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
